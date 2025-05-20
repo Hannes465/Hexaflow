@@ -64,6 +64,7 @@ main_text_rect = main_text.get_rect(center=(SCREEN_WHITH/2, SCREEN_HIGHT/2))
 setting = font_large.render("Settings", True, red)
 win = False
 w_lvl1 = False
+w_lvl2 = False
 lvl2time = 0
  
 image = pygame.image.load("planet06.png").convert_alpha()
@@ -103,9 +104,10 @@ money = pygame.image.load("tower4 1.png").convert_alpha()
 money = pygame.transform.scale(money, (70,30))
 money2 = pygame.image.load("tower4 2.png").convert_alpha()
 money2 = pygame.transform.scale(money2, (70,30))
-lvl2 = pygame.image.load("lvl2.png").convert_alpha()
-lvl2 = pygame.transform.flip(lvl2, True, False)
-lvl2 = pygame.transform.scale(lvl2, (SCREEN_WHITH, SCREEN_HIGHT))
+lvl2 = pygame.image.load("lvl2.jpg").convert_alpha()
+lvl2 = pygame.transform.scale(lvl2, (SCREEN_WHITH+600, SCREEN_HIGHT))
+lock = pygame.image.load("lock.png").convert_alpha()
+lock = pygame.transform.scale(lock, (40, 40))
  
 left_pos = (SCREEN_WHITH-SCREEN_WHITH, SCREEN_HIGHT/2)
 right_pos = (SCREEN_WHITH, SCREEN_HIGHT/2)
@@ -145,7 +147,6 @@ laser1t = 0
 buttons = [
     {"rect": pygame.Rect(SCREEN_WHITH/2-150, SCREEN_HIGHT/2-90, 300, 70), "text": "Level 1"},
     {"rect": pygame.Rect(SCREEN_WHITH/2-150, SCREEN_HIGHT/2, 300, 70), "text": "Level 2"},
-    {"rect": pygame.Rect(SCREEN_WHITH/2-150, SCREEN_HIGHT/2+90, 300, 70), "text": "Level 3"},
     {"rect": pygame.Rect(SCREEN_WHITH/2-150, SCREEN_HIGHT/2+180, 300, 70), "text": "Beenden"},
     {"rect": pygame.Rect(SCREEN_WHITH-120, 30, 90, 90), "text": " "}
         #{"rect": pygame.Rect(SCREEN_WHITH/2+180, SCREEN_HIGHT/2-90, 70, 70), "text": "Reset"},
@@ -195,7 +196,7 @@ class Enemy:
             self.x += self.speed * dx / dist
             self.y += self.speed * dy / dist
     def take_dmg(self,amount):
-        if self.cooldown > 30:
+        if self.cooldown > 15:
             self.lives -= amount
             self.cooldown = 0      
         if self.lives <= 0:
@@ -430,13 +431,10 @@ while running:
                             show_screen4 = False
                             spiele_musik(lvl1s)
                             menu_running = False
-                        elif label == "Level 2" and s_settings == False:
+                        elif label == "Level 2" and s_settings ==  False and w_lvl1 == True:
                             s_lvl2 = True
                             menu_running = False
                             spiele_musik(level2)
-                        elif label == "Level 3" and s_settings == False:
-                            print(3)
-                            menu_running = False
                         elif label == " " and s_settings == False:
                             menu_running = False
                             time.sleep(1)
@@ -453,6 +451,8 @@ while running:
                     elif erststart == True:
                         time.sleep(0.1)
                         erststart = False
+        if not w_lvl1:
+            screen.blit(lock,(SCREEN_WHITH/2-20, SCREEN_HIGHT/2+20, 300, 70))
     if s_settings:
         mouse_pos = pygame.mouse.get_pos()
  
@@ -550,7 +550,7 @@ while running:
                     pygame.draw.rect(screen,red,(hibox[0],hibox[1]+40,20,90))
                     if (hibox[0] < positioEn[0]+35 < (hibox[0]+20)) and (hibox[1]+40 < positioEn[1]+35 < (hibox[1]+160)):
                         Enemy.take_dmg(self = eny,amount = 10)
-                money += Enemy.getmoney(self = eny)
+                money += Enemy.getmoney(self = eny)/2
            
         else:
             for eny in enemies:
@@ -559,7 +559,7 @@ while running:
                     pygame.draw.rect(screen,red,(hibox[0],hibox[1]-150,20,90))
                     if (hibox[0] < positioEn[0]+35 < (hibox[0]+20)) and (hibox[1]-150 < positioEn[1]+35 < (hibox[1]+40)):
                         Enemy.take_dmg(self = eny,amount = 10)
-                money += Enemy.getmoney(self = eny)
+                money += Enemy.getmoney(self = eny)/2
            
         if laser1t >= 100:
  
@@ -659,7 +659,7 @@ while running:
             for hbox in hitboxes:
                 if (hbox[0]-5 < positioEn[0]+35 < (hbox[0]+35)) and (hbox[1]-5 < positioEn[1]+35 < (hbox[1]+75)):
                     Enemy.take_dmg(self = eny,amount = 5)
-            money += Enemy.getmoney(self = eny)
+            money += (Enemy.getmoney(self = eny))/2
         if lvl1lives <= 0:
             lvl1lives = 0
             s_lvl1 = False
@@ -781,6 +781,7 @@ while running:
         towers3 = []
         spawnedlvl1 = 0
         spawnlvl1 = 0
+        s_lvl1 = False
         money = 1000
         lvl1lives = 200
         pygame.display.flip()
@@ -790,11 +791,11 @@ while running:
         w_lvl1 = True
              
     if death:
-   
+        s_lvl1 = False
         screen.fill(black)
         screen.blit(stars,(0,0))
         deathfont = font_large.render("Du bist gestorben",False,red)
-        screen.blit(deathfont,(SCREEN_WHITH/2-250,SCREEN_HIGHT/2-20))
+        screen.blit(deathfont,(SCREEN_WHITH/2-320,SCREEN_HIGHT/2-20))
         enemies = []
         towers = []
         towers2 = []
@@ -816,7 +817,7 @@ while running:
         hitboxes2 = towers3
         mouse_pos = pygame.mouse.get_pos()
         screen.fill(black)
-        screen.blit(lvl2,(0,75))
+        screen.blit(lvl2,(-300,75))
        
         dt = clock.tick(60)
         spawn_timer += dt
@@ -829,7 +830,7 @@ while running:
                     pygame.draw.rect(screen,red,(hibox[0],hibox[1]+40,20,90))
                     if (hibox[0] < positioEn[0]+35 < (hibox[0]+20)) and (hibox[1]+40 < positioEn[1]+35 < (hibox[1]+160)):
                         Enemy.take_dmg(self = eny,amount = 10)
-                money += Enemy.getmoney(self = eny)
+                money += Enemy.getmoney(self = eny)/2
            
         else:
             for eny in enemies:
@@ -838,7 +839,7 @@ while running:
                     pygame.draw.rect(screen,red,(hibox[0],hibox[1]-150,20,90))
                     if (hibox[0] < positioEn[0]+35 < (hibox[0]+20)) and (hibox[1]-150 < positioEn[1]+35 < (hibox[1]+40)):
                         Enemy.take_dmg(self = eny,amount = 10)
-                money += Enemy.getmoney(self = eny)
+                money += Enemy.getmoney(self = eny)/2
            
         if laser1t >= 100:
  
@@ -938,7 +939,7 @@ while running:
             for hbox in hitboxes:
                 if (hbox[0]-5 < positioEn[0]+35 < (hbox[0]+35)) and (hbox[1]-5 < positioEn[1]+35 < (hbox[1]+75)):
                     Enemy.take_dmg(self = eny,amount = 5)
-            money += Enemy.getmoney(self = eny)
+            money += Enemy.getmoney(self = eny)/2
         if lvl1lives <= 0:
             lvl1lives = 0
             s_lvl1 = False
@@ -1058,6 +1059,7 @@ while running:
         towers = []
         towers2 = []
         towers3 = []
+        s_lvl2 = False
         spawnedlvl1 = 0
         spawnlvl1 = 0
         money = 1000
@@ -1069,7 +1071,7 @@ while running:
         w_lvl1 = True
              
     if death:
-   
+        s_lvl2 = False
         screen.fill(black)
         screen.blit(stars,(0,0))
         deathfont = font_large.render("Du bist gestorben",False,red)
