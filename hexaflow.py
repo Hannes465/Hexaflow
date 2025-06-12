@@ -1,5 +1,14 @@
 import pygame,sys,time,math
 s_lvl2 = False
+h_win = False
+r1 = False
+r2 = False
+sperre1 = False
+sperre2 = False
+scounter1 = 0
+scounter2 = 0
+r1counter = 0
+r2counter = 0
 l2money = 200
 SCREEN_HIGHT = 900
 SCREEN_WHITH = 1600
@@ -15,6 +24,10 @@ level2 = "lvl2m.mp3"
 menu = "menu.mp3"
 rick = "rick roll.mp3"
 lvl1s = "lvl1.mp3"
+hardcorem = "Hardcore.mp3"
+lvl1h = "lvl1h.mp3"
+lvl2h = "lvl2h.mp3"
+hardcore = False
 num = 1
 pygame.mixer.music.set_volume(volume)
 def spiele_musik(datei):
@@ -48,6 +61,7 @@ font_large = pygame.font.SysFont("Georgia", 72)
 font = pygame.font.SysFont("Georgia", 32)
 font_small = pygame.font.SysFont(None, 36)
 font_extra = pygame.font.SysFont("Georgia", 120)
+fontnor = pygame.font.SysFont("Georgia", 54)
  
  
  
@@ -65,12 +79,16 @@ setting = font_large.render("Settings", True, red)
 win = False
 w_lvl1 = False
 w_lvl2 = False
+lvl1speicher = False
+lvl2speicher = False
 lvl2time = 0
  
 image = pygame.image.load("planet06.png").convert_alpha()
 image_scaled = pygame.transform.scale(image, (SCREEN_HIGHT, SCREEN_HIGHT))
 planet01 = pygame.image.load("planet01.png").convert_alpha()
 planet01 = pygame.transform.scale(planet01, (SCREEN_HIGHT, SCREEN_HIGHT))
+planet04 = pygame.image.load("planet04.png").convert_alpha()
+planet04 = pygame.transform.scale(planet04, (SCREEN_HIGHT, SCREEN_HIGHT))
 stars = pygame.image.load("stars.jpg").convert_alpha()
 stars = pygame.transform.scale(stars, (SCREEN_WHITH, SCREEN_HIGHT))
 settings = pygame.image.load("gear.jpg").convert_alpha()
@@ -104,7 +122,7 @@ money = pygame.image.load("tower4 1.png").convert_alpha()
 money = pygame.transform.scale(money, (70,30))
 money2 = pygame.image.load("tower4 2.png").convert_alpha()
 money2 = pygame.transform.scale(money2, (70,30))
-lvl2 = pygame.image.load("lvl2.jpg").convert_alpha()
+lvl2 = pygame.image.load("lvl2.png").convert_alpha()
 lvl2 = pygame.transform.scale(lvl2, (SCREEN_WHITH+600, SCREEN_HIGHT))
 lock = pygame.image.load("lock.png").convert_alpha()
 lock = pygame.transform.scale(lock, (40, 40))
@@ -112,18 +130,9 @@ lock = pygame.transform.scale(lock, (40, 40))
 left_pos = (SCREEN_WHITH-SCREEN_WHITH, SCREEN_HIGHT/2)
 right_pos = (SCREEN_WHITH, SCREEN_HIGHT/2)
  
-def draw_button(surface, text, rect, color, hover_color, mouse_pos):
-    if rect.collidepoint(mouse_pos):
  
-        pygame.draw.rect(surface, hover_color, rect)
-    else:
-        pygame.draw.rect(surface, color, rect)
-   
-    text_surf = font_large.render(text, True, red)
-    text_rect = text_surf.get_rect(center=rect.center)
-    surface.blit(text_surf, text_rect)
-startbutton = pygame.Rect(SCREEN_WHITH/2-150, SCREEN_HIGHT/2-50, 300, 100)
 angle = 0
+ 
 alpha = 0
 fade_in = True
 show_startscreen = True
@@ -136,6 +145,7 @@ s_settings = False
 erststart = True
 rickroll = False
 placemode = False
+settings2 = False
 start_time = pygame.time.get_ticks()
 lvl1time = 0
 killed = 0
@@ -148,9 +158,9 @@ buttons = [
     {"rect": pygame.Rect(SCREEN_WHITH/2-150, SCREEN_HIGHT/2-90, 300, 70), "text": "Level 1"},
     {"rect": pygame.Rect(SCREEN_WHITH/2-150, SCREEN_HIGHT/2, 300, 70), "text": "Level 2"},
     {"rect": pygame.Rect(SCREEN_WHITH/2-150, SCREEN_HIGHT/2+180, 300, 70), "text": "Beenden"},
-    {"rect": pygame.Rect(SCREEN_WHITH-120, 30, 90, 90), "text": " "}
-        #{"rect": pygame.Rect(SCREEN_WHITH/2+180, SCREEN_HIGHT/2-90, 70, 70), "text": "Reset"},
-    #{"rect": pygame.Rect(SCREEN_WHITH/2+180, SCREEN_HIGHT/2, 70, 70), "text": " Reset "},
+    {"rect": pygame.Rect(SCREEN_WHITH-120, 30, 90, 90), "text": " "},
+    {"rect": pygame.Rect(SCREEN_WHITH/2+180, SCREEN_HIGHT/2-90, 70, 70), "text": "Reset"},
+    {"rect": pygame.Rect(SCREEN_WHITH/2+180, SCREEN_HIGHT/2, 70, 70), "text": " Reset "}
    # {"rect": pygame.Rect(SCREEN_WHITH/2+180, SCREEN_HIGHT/2+90, 70, 70), "text": "  Reset  "}
 ]
 buttons2 = [
@@ -160,6 +170,7 @@ buttons2 = [
     {"rect": pygame.Rect(SCREEN_WHITH/2-115/2, 300, 115, 50), "text": "Mute"},
     {"rect": pygame.Rect(SCREEN_WHITH/2-160/2, SCREEN_HIGHT-80, 160, 50), "text": "Cheats"},
     {"rect": pygame.Rect(SCREEN_WHITH/2-180/2, 500, 180, 50), "text": "Window"}
+ 
 ]
 buttons3 = [
     {"rect": pygame.Rect(50, 50, 70, 70), "text": "  "},
@@ -167,6 +178,13 @@ buttons3 = [
     {"rect": pygame.Rect(320, 50, 70, 70), "text": "   "},
     {"rect": pygame.Rect(440, 50, 70, 70), "text": "    "}
 ]
+ 
+ 
+buttons4 = [
+    {"rect": pygame.Rect(SCREEN_WHITH/2-150, SCREEN_HIGHT/2-50, 300, 100), "text": "Start"}
+]
+ 
+ 
  
 WHITE = (255, 255, 255)
 RED = (200, 50, 50)
@@ -272,6 +290,7 @@ tower_position2 = (0, 0)
 tower_position3 = (0, 0)
  
  
+ 
 def draw_tower(tower):
     pygame.draw.circle(screen, RED, (tower[0], tower[1]), 30)
     pygame.draw.circle(screen, BLACK, (tower[0], tower[1]), 30, 3)  
@@ -331,9 +350,16 @@ spawn_timer = 0
 spawn_interval = 250  #ms
 death = False
 once = True
- 
+show_startscreen= True
 running = True
+w_lvl1 = False
 while running:
+    if w_lvl2:
+        buttons4 = [
+            {"rect": pygame.Rect(SCREEN_WHITH/2-150, SCREEN_HIGHT/2-90, 300, 100), "text": "Start"},
+            {"rect": pygame.Rect(SCREEN_WHITH/2-150, SCREEN_HIGHT/2+30, 300, 100), "text": "Hardcore"}
+        ]
+   
     screen.fill(black)
     now = pygame.time.get_ticks()
  
@@ -395,21 +421,53 @@ while running:
         screen.fill(black)
         screen.blit(stars,(0,0))
         screen.blit(planet01, (SCREEN_WHITH/2-SCREEN_HIGHT/2,SCREEN_HIGHT-SCREEN_HIGHT))
-        mouse_pos2 = pygame.mouse.get_pos()
+        mouse_pos = pygame.mouse.get_pos()
+        for btn in buttons4:
+            color = DARK_BLUE if btn["rect"].collidepoint(mouse_pos) else BLUE
+            pygame.draw.rect(screen, color, btn["rect"])
+            text_surf = font_large.render(btn["text"], True, red)
+            text_rect = text_surf.get_rect(center=btn["rect"].center)
+            screen.blit(text_surf, text_rect)
         if event.type == pygame.MOUSEBUTTONDOWN:
-            if startbutton.collidepoint(event.pos):
-                show_screen3 = False
-                time.sleep(1)
-                show_screen4 = True
-        draw_button(screen, "Start", startbutton, BLUE, DARK_BLUE, mouse_pos2)
+            for btn in buttons4:
+                if btn["rect"].collidepoint(event.pos):
+                    label = btn["text"]
+                    if label == "Start":
+                        show_screen4 = True
+                        show_screen3 = False
+                        hardcore = False
+                    elif label == "Hardcore":
+                        show_screen4 = True
+                        show_screen3 = False
+                        hardcore = True
+                        w_lvl1 = False
+                        spiele_musik(hardcorem)
+       
     if show_screen4:
         mouse_pos = pygame.mouse.get_pos()
         pygame.mixer.music.set_volume(volume)
         screen.fill(black)
         screen.blit(stars, (0, 0))
         screen.blit(planet01, (SCREEN_WHITH / 2 - SCREEN_HIGHT / 2, 0))
+        if hardcore:
+            screen.blit(planet04, (SCREEN_WHITH / 2 - SCREEN_HIGHT / 2, 0))  
         screen.blit(hexa, hexa.get_rect(center=(SCREEN_WHITH / 2, SCREEN_HIGHT / 2 - 180)))
- 
+        reset1 = font.render("Du hast Level 1 zurückgestezt",True,red)
+        reset2 = font.render("Du hast Level 2 zurückgestezt",True,red)
+        s1 = font.render("Bitte beende oder resette erst Level 1",True,red)
+        s2 = font.render("Bitte beende oder resette erst Level 2",True,red)
+        if r1:
+            screen.blit(reset1,(SCREEN_WHITH/2+270, SCREEN_HIGHT/2-90+20, 70, 70))
+            r1counter +=1
+            if r1counter > 100:
+                r1counter = 0
+                r1 = False
+        if r2:
+            screen.blit(reset2,(SCREEN_WHITH/2+270, SCREEN_HIGHT/2+20, 70, 70))
+            r2counter +=1
+            if r2counter > 100:
+                r2counter = 0
+                r2 = False
         for btn in buttons:
             color = DARK_BLUE if btn["rect"].collidepoint(mouse_pos) else BLUE
             pygame.draw.rect(screen, color, btn["rect"])
@@ -426,15 +484,21 @@ while running:
                         if label == "Beenden":
                             pygame.quit()
                             sys.exit()
-                        elif label == "Level 1" and s_settings == False:
+                        elif label == "Level 1" and s_settings == False and lvl2speicher == False:
+                            lvl1speicher = True
                             s_lvl1 = True
                             show_screen4 = False
                             spiele_musik(lvl1s)
+                            if hardcore:
+                                spiele_musik(lvl1h)
                             menu_running = False
-                        elif label == "Level 2" and s_settings ==  False and w_lvl1 == True:
+                        elif label == "Level 2" and s_settings ==  False and w_lvl1 == True and lvl1speicher == False:
+                            lvl2speicher = True
                             s_lvl2 = True
-                            menu_running = False
                             spiele_musik(level2)
+                            if hardcore:
+                                spiele_musik(lvl2h)
+                            show_screen4 = False
                         elif label == " " and s_settings == False:
                             menu_running = False
                             time.sleep(1)
@@ -447,10 +511,24 @@ while running:
                             spawnedlvl1 = 0
                             spawnlvl1 = 0
                             money = 1000
+                            lvl1speicher = False
+                            r1 = True
+                        elif label == " Reset " and s_settings == False:
+                            lvl2speicher = False
+                            enemies = []
+                            towers = []
+                            towers2 = []
+                            towers3 = []
+                            spawnedlvl1 = 0
+                            spawnlvl1 = 0
+                            money = 1000
                             lvl1lives = 200
+                            r2 = True
                     elif erststart == True:
                         time.sleep(0.1)
                         erststart = False
+        helper = font.render("Um ein Level2 zu starten musst du zuerst Level1 resetten und umgekehrt. Spielstände werden gespeichert",True,red)
+        screen.blit(helper, helper.get_rect(center=(SCREEN_WHITH/2, SCREEN_HIGHT-50)))
         if not w_lvl1:
             screen.blit(lock,(SCREEN_WHITH/2-20, SCREEN_HIGHT/2+20, 300, 70))
     if s_settings:
@@ -459,6 +537,8 @@ while running:
         screen.fill(black)
         screen.blit(stars, (0, 0))
         screen.blit(planet01, (SCREEN_WHITH / 2 - SCREEN_HIGHT / 2, 0))
+        if hardcore:
+            screen.blit(planet04, (SCREEN_WHITH / 2 - SCREEN_HIGHT / 2, 0))
         screen.blit(setting, setting.get_rect(center=(SCREEN_WHITH / 2, 40 )))
         volume = (round(volume*100))/100
         if volume < 0:
@@ -527,8 +607,14 @@ while running:
                             {"rect": pygame.Rect(SCREEN_WHITH/2-115/2, 300, 115, 50), "text": "Mute"},
                             {"rect": pygame.Rect(SCREEN_WHITH/2-160/2, SCREEN_HIGHT-80, 160, 50), "text": "Cheats"},
                             {"rect": pygame.Rect(SCREEN_WHITH/2-180/2, 500, 180, 50), "text": "Window"}
+                       
                         ]
                         pygame.display.flip()
+ 
+    if hardcore:
+        multi = 1.5
+    if not hardcore:
+        multi = 1
     if s_lvl1:
         square_path = [
         (-10, 200), (SCREEN_WHITH-100, 200),
@@ -549,7 +635,7 @@ while running:
                 for hibox in hitboxes2:
                     pygame.draw.rect(screen,red,(hibox[0],hibox[1]+40,20,90))
                     if (hibox[0] < positioEn[0]+35 < (hibox[0]+20)) and (hibox[1]+40 < positioEn[1]+35 < (hibox[1]+160)):
-                        Enemy.take_dmg(self = eny,amount = 10)
+                        Enemy.take_dmg(self = eny,amount = 10/multi)
                 money += Enemy.getmoney(self = eny)/2
            
         else:
@@ -558,7 +644,7 @@ while running:
                 for hibox in hitboxes2:
                     pygame.draw.rect(screen,red,(hibox[0],hibox[1]-150,20,90))
                     if (hibox[0] < positioEn[0]+35 < (hibox[0]+20)) and (hibox[1]-150 < positioEn[1]+35 < (hibox[1]+40)):
-                        Enemy.take_dmg(self = eny,amount = 10)
+                        Enemy.take_dmg(self = eny,amount = 10/multi)
                 money += Enemy.getmoney(self = eny)/2
            
         if laser1t >= 100:
@@ -598,16 +684,10 @@ while running:
                     label = btn["text"]
                     if label == "  ":
                         s_lvl1 = False
-                        enemies = []
-                        towers = []
-                        towers2 = []
-                        towers3 = []
-                        spawnedlvl1 = 0
-                        spawnlvl1 = 0
-                        money = 1000
-                        lvl1lives = 200
                         show_screen4 = True
                         spiele_musik(menu)
+                        if hardcore:
+                            spiele_musik(hardcorem)
                     if label == " " and money - 300 >= 0:
                             lvl1time = 0
                             placing_tower=True
@@ -658,7 +738,7 @@ while running:
             positioEn = Enemy.get_position(self = eny)
             for hbox in hitboxes:
                 if (hbox[0]-5 < positioEn[0]+35 < (hbox[0]+35)) and (hbox[1]-5 < positioEn[1]+35 < (hbox[1]+75)):
-                    Enemy.take_dmg(self = eny,amount = 5)
+                    Enemy.take_dmg(self = eny,amount = 5/multi)
             money += (Enemy.getmoney(self = eny))/2
         if lvl1lives <= 0:
             lvl1lives = 0
@@ -737,7 +817,7 @@ while running:
         if spawnedlvl1 >= 64:
             for eny in enemies:
                 Enemy.getindic(self = eny, indi = 3)
-        if spawnedlvl1 >= 80:
+        if spawnedlvl1 >= 86:
             win = True
             s_lvl1 = False
         screen.blit(wall,(220,50))
@@ -772,9 +852,11 @@ while running:
     if win:
         screen.fill(black)
         spiele_musik(menu)
+        if hardcore:
+            spiele_musik(hardcorem)
         screen.blit(stars,(0,0))
         deathfont = font_large.render("Du hast gewonnen",False,red)
-        screen.blit(deathfont,(SCREEN_WHITH/2-250,SCREEN_HIGHT/2-20))
+        screen.blit(deathfont,(SCREEN_WHITH/2-300,SCREEN_HIGHT/2-20))
         enemies = []
         towers = []
         towers2 = []
@@ -787,11 +869,15 @@ while running:
         pygame.display.flip()
         time.sleep(2)
         win = False
-        show_screen3 = True
+        show_screen4 = True
         w_lvl1 = True
+        lvl1speicher = False
              
     if death:
         s_lvl1 = False
+        show_screen3 = True
+        if hardcore:
+            spiele_musik(hardcorem)
         screen.fill(black)
         screen.blit(stars,(0,0))
         deathfont = font_large.render("Du bist gestorben",False,red)
@@ -808,6 +894,7 @@ while running:
         time.sleep(2)
         death = False
         show_screen3 = True
+   
  
     if s_lvl2:
         square_path = [
@@ -817,7 +904,7 @@ while running:
         hitboxes2 = towers3
         mouse_pos = pygame.mouse.get_pos()
         screen.fill(black)
-        screen.blit(lvl2,(-300,75))
+        screen.blit(lvl2,(-200,0))
        
         dt = clock.tick(60)
         spawn_timer += dt
@@ -829,7 +916,7 @@ while running:
                 for hibox in hitboxes2:
                     pygame.draw.rect(screen,red,(hibox[0],hibox[1]+40,20,90))
                     if (hibox[0] < positioEn[0]+35 < (hibox[0]+20)) and (hibox[1]+40 < positioEn[1]+35 < (hibox[1]+160)):
-                        Enemy.take_dmg(self = eny,amount = 10)
+                        Enemy.take_dmg(self = eny,amount = 10/multi)
                 money += Enemy.getmoney(self = eny)/2
            
         else:
@@ -838,7 +925,7 @@ while running:
                 for hibox in hitboxes2:
                     pygame.draw.rect(screen,red,(hibox[0],hibox[1]-150,20,90))
                     if (hibox[0] < positioEn[0]+35 < (hibox[0]+20)) and (hibox[1]-150 < positioEn[1]+35 < (hibox[1]+40)):
-                        Enemy.take_dmg(self = eny,amount = 10)
+                        Enemy.take_dmg(self = eny,amount = 10/multi)
                 money += Enemy.getmoney(self = eny)/2
            
         if laser1t >= 100:
@@ -878,16 +965,10 @@ while running:
                     label = btn["text"]
                     if label == "  ":
                         s_lvl2 = False
-                        enemies = []
-                        towers = []
-                        towers2 = []
-                        towers3 = []
-                        spawnedlvl1 = 0
-                        spawnlvl1 = 0
-                        money = 1000
-                        lvl1lives = 200
                         show_screen4 = True
                         spiele_musik(menu)
+                        if hardcore:
+                            spiele_musik(hardcorem)
                     if label == " " and money - 300 >= 0:
                             lvl1time = 0
                             placing_tower=True
@@ -938,7 +1019,7 @@ while running:
             positioEn = Enemy.get_position(self = eny)
             for hbox in hitboxes:
                 if (hbox[0]-5 < positioEn[0]+35 < (hbox[0]+35)) and (hbox[1]-5 < positioEn[1]+35 < (hbox[1]+75)):
-                    Enemy.take_dmg(self = eny,amount = 5)
+                    Enemy.take_dmg(self = eny,amount = 5/multi)
             money += Enemy.getmoney(self = eny)/2
         if lvl1lives <= 0:
             lvl1lives = 0
@@ -1017,7 +1098,7 @@ while running:
         if spawnedlvl1 >= 64:
             for eny in enemies:
                 Enemy.getindic(self = eny, indi = 3)
-        if spawnedlvl1 >= 80:
+        if spawnedlvl1 >= 100:
             win = True
             s_lvl1 = False
         screen.blit(wall,(220,50))
@@ -1054,7 +1135,7 @@ while running:
         spiele_musik(menu)
         screen.blit(stars,(0,0))
         deathfont = font_large.render("Du hast gewonnen",False,red)
-        screen.blit(deathfont,(SCREEN_WHITH/2-250,SCREEN_HIGHT/2-20))
+        screen.blit(deathfont,(SCREEN_WHITH/2-300,SCREEN_HIGHT/2-20))
         enemies = []
         towers = []
         towers2 = []
@@ -1067,11 +1148,19 @@ while running:
         pygame.display.flip()
         time.sleep(2)
         win = False
-        show_screen3 = True
-        w_lvl1 = True
+        if not hardcore:
+            show_screen3 = True
+            w_lvl2= True
+        else:
+            h_win = True
+            start_time2 = 0
+        lvl2speicher = False
              
     if death:
         s_lvl2 = False
+       
+        if hardcore:
+            spiele_musik(hardcorem)
         screen.fill(black)
         screen.blit(stars,(0,0))
         deathfont = font_large.render("Du bist gestorben",False,red)
@@ -1088,6 +1177,36 @@ while running:
         time.sleep(2)
         death = False
         show_screen3 = True
+       
+ 
+    if h_win:
+        start_time2 += 1
+        pygame.mouse.set_visible(False)
+        screen.blit(stars,(0,0))
+        if fade_in:
+            alpha += 2
+            if alpha >= 255:
+                alpha = 255
+                fade_in = False
+        else:
+            alpha -= 2
+            if alpha <= 0:
+                alpha = 0
+                fade_in = True
+ 
+        ende = font_large.render("Hexaflow by Hannes",True,red)
+        ende2 = font.render("Ende",True,WHITE)
+        ende.set_alpha(alpha)
+        ende2.set_alpha(alpha)
+ 
+        screen.blit(ende, start_text1.get_rect(center=(SCREEN_WHITH/2, SCREEN_HIGHT/2-50)))
+        screen.blit(ende2, start_text2.get_rect(center=(SCREEN_WHITH/2, SCREEN_HIGHT/2+50)))
+        if start_time2 > 120:
+            running = False
+ 
+ 
+       
+       
  
     pygame.display.flip()
     clock.tick(60)
@@ -1099,3 +1218,4 @@ while running:
  
 pygame.quit()
 sys.exit()
+ 
