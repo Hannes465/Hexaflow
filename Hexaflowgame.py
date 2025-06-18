@@ -180,7 +180,7 @@ buttons = [
     {"rect": pygame.Rect(SCREEN_WHITH-120, 30, 90, 90), "text": " "},
     {"rect": pygame.Rect(SCREEN_WHITH/2+180, SCREEN_HIGHT/2-90, 70, 70), "text": "Reset"},
     {"rect": pygame.Rect(SCREEN_WHITH/2+180, SCREEN_HIGHT/2, 70, 70), "text": " Reset "},
-    {"rect": pygame.Rect(20,20, 70, 70), "text": "Back"}
+    {"rect": pygame.Rect(20,200, 70, 70), "text": "Back"}
    # {"rect": pygame.Rect(SCREEN_WHITH/2+180, SCREEN_HIGHT/2+90, 70, 70), "text": "  Reset  "}
 ]
 buttons2 = [
@@ -189,7 +189,6 @@ buttons2 = [
     {"rect": pygame.Rect(30, 30, 140, 50), "text": "Zurück"},
     {"rect": pygame.Rect(SCREEN_WHITH/2-115/2, 300, 115, 50), "text": "Mute"},
     {"rect": pygame.Rect(SCREEN_WHITH/2-160/2, SCREEN_HIGHT-80, 160, 50), "text": "Cheats"},
-    {"rect": pygame.Rect(SCREEN_WHITH/2-100, SCREEN_HIGHT-150, 200, 50), "text": "Hitboxesbutton"},
     {"rect": pygame.Rect(SCREEN_WHITH/2-180/2, 500, 180, 50), "text": "Window"}
  
 ]
@@ -654,7 +653,6 @@ while running:
                             {"rect": pygame.Rect(30, 30, 140, 50), "text": "Zurück"},
                             {"rect": pygame.Rect(SCREEN_WHITH/2-115/2, 300, 115, 50), "text": "Mute"},
                             {"rect": pygame.Rect(SCREEN_WHITH/2-160/2, SCREEN_HIGHT-80, 160, 50), "text": "Cheats"},
-                            {"rect": pygame.Rect(SCREEN_WHITH/2-100, SCREEN_HIGHT-150, 200, 50), "text": "Hitboxesbutton"},
                             {"rect": pygame.Rect(SCREEN_WHITH/2-180/2, 500, 180, 50), "text": "Fullscreen"}
                         ]
                         pygame.display.flip()
@@ -667,26 +665,10 @@ while running:
                             {"rect": pygame.Rect(30, 30, 140, 50), "text": "Zurück"},
                             {"rect": pygame.Rect(SCREEN_WHITH/2-115/2, 300, 115, 50), "text": "Mute"},
                             {"rect": pygame.Rect(SCREEN_WHITH/2-160/2, SCREEN_HIGHT-80, 160, 50), "text": "Cheats"},
-                            {"rect": pygame.Rect(SCREEN_WHITH/2-100, SCREEN_HIGHT-150, 200, 50), "text": "Hitboxesbutton"},
                             {"rect": pygame.Rect(SCREEN_WHITH/2-180/2, 500, 180, 50), "text": "Window"}
                        
                         ]
                         pygame.display.flip()
-                    elif label == "Hitboxesbutton":
-                        waiting_for_key = True
-                        saved_key = None
-                    key_text = font.render(f"Rufe die Hitboxes auf mit: {saved_key}", True, red)
-                    screen.blit(key_text, (SCREEN_WHITH/2-100, SCREEN_HIGHT-200))
-                    if waiting_for_key:
-                        waiting_text = font.render("Lege Hitboxes fest auf...", True, red)
-                        screen.blit(waiting_text, (SCREEN_HIGHT/2-60, SCREEN_HIGHT-110))
-
-                        waiting_for_key = True
-                        saved_key = None
-
-                    elif event.type == pygame.KEYDOWN and waiting_for_key:
-                        saved_key = pygame.key.name(event.key)
-                        waiting_for_key = False
  
     if hardcore:
         multi = 1.5
@@ -729,35 +711,17 @@ while running:
             laser1t = 0
             l2 = False
         hintergrund = pygame.draw.rect(screen,lightgray,pygame.Rect(0,0,SCREEN_WHITH+100,150))
- 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    placing_tower = False
-                    placing_tower2 = False
-                    placing_tower3 = False
-                elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_p:
 
-                        show_rectangles = not show_rectangles
+            
 
-        if show_rectangles:
-            for enemy in enemies:
-                x, y = enemy.get_position()
-                pygame.draw.rect(screen, red, (x - 25, y - 30, 60, 60))
+        
                        
         if spawn_timer >= spawn_interval:
  
             enemies.append(Enemy(square_path))
             spawn_timer = 0
         mouse_x,mouse_y = pygame.mouse.get_pos()
-        for enemy in enemies:
-            enemy.move()
- 
-        for enemy in enemies:
-            enemy.draw(screen)
+        
        
         for btn in buttons3:
             color = DARK_BLUE if btn["rect"].collidepoint(mouse_pos) else BLUE
@@ -766,28 +730,46 @@ while running:
             text_rect = text_surf.get_rect(center=btn["rect"].center)
             screen.blit(text_surf, text_rect)
         screen.blit(pause,(50,50))
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            for btn in buttons3:
-                if btn["rect"].collidepoint(event.pos):
-                    label = btn["text"]
-                    if label == "  ":
-                        s_lvl1 = False
-                        show_screen4 = True
-                        spiele_musik(menu)
-                        if hardcore:
-                            spiele_musik(hardcorem)
-                    if label == " " and money - 300 >= 0:
-                            lvl1time = 0
-                            placing_tower=True
-                            new_tower = (mouse_x, mouse_y)
-                    if label == "   " and money - 500 >= 0:
-                            lvl1time = 0
-                            placing_tower2=True
-                            new_tower2 = (mouse_x, mouse_y)
-                    if label == "    " and money - 400 >= 0:
-                            lvl1time = 0
-                            placing_tower3=True
-                            new_tower3 = (mouse_x, mouse_y)
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                for btn in buttons3:
+                    if btn["rect"].collidepoint(event.pos):
+                        label = btn["text"]
+                        if label == "  ":
+                            s_lvl1 = False
+                            show_screen4 = True
+                            spiele_musik(menu)
+                            if hardcore:
+                                spiele_musik(hardcorem)
+                        if label == " " and money - 300 >= 0:
+                                lvl1time = 0
+                                placing_tower=True
+                                new_tower = (mouse_x, mouse_y)
+                        if label == "   " and money - 500 >= 0:
+                                lvl1time = 0
+                                placing_tower2=True
+                                new_tower2 = (mouse_x, mouse_y)
+                        if label == "    " and money - 400 >= 0:
+                                lvl1time = 0
+                                placing_tower3=True
+                                new_tower3 = (mouse_x, mouse_y)
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    placing_tower = False
+                    placing_tower2 = False
+                    placing_tower3 = False
+                if event.key == pygame.K_p:
+
+                    show_rectangles = not show_rectangles
+        if show_rectangles:
+            for enemy in enemies:
+                x, y = enemy.get_position()
+                pygame.draw.rect(screen, red, (x - 25, y - 30, 60, 60))
+        for enemy in enemies:
+            enemy.move()
+ 
+        for enemy in enemies:
+            enemy.draw(screen)
  
                            
         if placing_tower:
@@ -910,7 +892,7 @@ while running:
         if spawnedlvl1 >= 64:
             for eny in enemies:
                 Enemy.getindic(self = eny, indi = 3)
-        if spawnedlvl1 >= 86:
+        if spawnedlvl1 >= 3:
             win = True
             s_lvl1 = False
         screen.blit(wall,(220,50))
@@ -1027,33 +1009,17 @@ while running:
             l2 = False
         hintergrund = pygame.draw.rect(screen,lightgray,pygame.Rect(0,0,SCREEN_WHITH+100,150))
  
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    placing_tower = False
-                    placing_tower2 = False
-                    placing_tower3 = False
-                elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_p:
+            
 
-                        show_rectangles = not show_rectangles
+                        
 
-        if show_rectangles:
-            for enemy in enemies:
-                x, y = enemy.get_position()
-                pygame.draw.rect(screen, red, (x - 25, y - 30, 60, 60))
+        
 
         if spawn_timer >= spawn_interval:
             enemies.append(Enemy(square_path))
             spawn_timer = 0
         mouse_x,mouse_y = pygame.mouse.get_pos()
-        for enemy in enemies:
-            enemy.move()
- 
-        for enemy in enemies:
-            enemy.draw(screen)
+        
        
         for btn in buttons3:
             color = DARK_BLUE if btn["rect"].collidepoint(mouse_pos) else BLUE
@@ -1085,7 +1051,23 @@ while running:
                                 lvl1time = 0
                                 placing_tower3=True
                                 new_tower3 = (mouse_x, mouse_y)
-                   
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    placing_tower = False
+                    placing_tower2 = False
+                    placing_tower3 = False
+                if event.key == pygame.K_p:
+                    show_rectangles = not show_rectangles
+            if show_rectangles:
+                for enemy in enemies:
+                    x, y = enemy.get_position()
+                    pygame.draw.rect(screen, red, (x - 25, y - 30, 60, 60))
+        for enemy in enemies:
+            enemy.move()
+ 
+        for enemy in enemies:
+            enemy.draw(screen)
+                    
                            
         if placing_tower:
             new_tower = (mouse_x, mouse_y)
@@ -1206,7 +1188,7 @@ while running:
         if spawnedlvl1 >= 64:
             for eny in enemies:
                 Enemy.getindic(self = eny, indi = 3)
-        if spawnedlvl1 >= 100:
+        if spawnedlvl1 >= 3:
             win = True
             s_lvl1 = False
         screen.blit(wall,(220,50))
@@ -1350,18 +1332,7 @@ while running:
             l2 = False
         hintergrund = pygame.draw.rect(screen,lightgray,pygame.Rect(0,0,SCREEN_WHITH+100,150))
  
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    placing_tower = False
-                    placing_tower2 = False
-                    placing_tower3 = False
-                elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_p:
 
-                        show_rectangles = not show_rectangles
 
         if show_rectangles:
             for enemy in enemies:
@@ -1373,11 +1344,7 @@ while running:
             enemies.append(Enemy(square_path))
             spawn_timer = 0
         mouse_x,mouse_y = pygame.mouse.get_pos()
-        for enemy in enemies:
-            enemy.move()
- 
-        for enemy in enemies:
-            enemy.draw(screen)
+        
        
         for btn in buttons3:
             color = DARK_BLUE if btn["rect"].collidepoint(mouse_pos) else BLUE
@@ -1407,6 +1374,23 @@ while running:
                             lvl1time = 0
                             placing_tower3=True
                             new_tower3 = (mouse_x, mouse_y)
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                placing_tower = False
+                placing_tower2 = False
+                placing_tower3 = False
+            if event.key == pygame.K_p:
+
+                show_rectangles = not show_rectangles
+        if show_rectangles:
+            for enemy in enemies:
+                x, y = enemy.get_position()
+                pygame.draw.rect(screen, red, (x - 25, y - 30, 60, 60))
+        for enemy in enemies:
+            enemy.move()
+ 
+        for enemy in enemies:
+            enemy.draw(screen)
  
                            
         if placing_tower:
