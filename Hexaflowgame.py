@@ -174,12 +174,12 @@ l2 = False
 laser1t = 0
 #Menu
 buttons = [
-    {"rect": pygame.Rect(SCREEN_WHITH/2-150, SCREEN_HIGHT/2-90, 300, 70), "text": "Level 1"},
-    {"rect": pygame.Rect(SCREEN_WHITH/2-150, SCREEN_HIGHT/2, 300, 70), "text": "Level 2"},
+    {"rect": pygame.Rect(SCREEN_WHITH/2-150, SCREEN_HIGHT/2, 300, 70), "text": "Level 1"},
+    {"rect": pygame.Rect(SCREEN_WHITH/2-150, SCREEN_HIGHT/2+90, 300, 70), "text": "Level 2"},
     {"rect": pygame.Rect(SCREEN_WHITH/2-150, SCREEN_HIGHT/2+180, 300, 70), "text": "Beenden"},
     {"rect": pygame.Rect(SCREEN_WHITH-120, 30, 90, 90), "text": " "},
-    {"rect": pygame.Rect(SCREEN_WHITH/2+180, SCREEN_HIGHT/2-90, 70, 70), "text": "Reset"},
-    {"rect": pygame.Rect(SCREEN_WHITH/2+180, SCREEN_HIGHT/2, 70, 70), "text": " Reset "},
+    {"rect": pygame.Rect(SCREEN_WHITH/2+180, SCREEN_HIGHT/2, 70, 70), "text": "Reset"},
+    {"rect": pygame.Rect(SCREEN_WHITH/2+180, SCREEN_HIGHT/2+90, 70, 70), "text": " Reset "},
     {"rect": pygame.Rect(20,200, 70, 70), "text": "Back"}
    # {"rect": pygame.Rect(SCREEN_WHITH/2+180, SCREEN_HIGHT/2+90, 70, 70), "text": "  Reset  "}
 ]
@@ -399,7 +399,7 @@ once = True
 show_startscreen= True
 running = True
 w_lvl1 = False
-w_lvl2 = False
+w_lvl2 = True
 while running:
     if w_lvl2:
         buttons4 = [
@@ -493,6 +493,7 @@ while running:
                         spiele_musik(hardcorem)
                     elif label == "Endless":
                         endless = True
+                        hardcore = False
                         spiele_musik(endlessm)
                     elif label == "Beenden":
                         running = False
@@ -506,7 +507,7 @@ while running:
         screen.blit(planet01, (SCREEN_WHITH / 2 - SCREEN_HIGHT / 2, 0))
         if hardcore:
             screen.blit(planet04, (SCREEN_WHITH / 2 - SCREEN_HIGHT / 2, 0))  
-        screen.blit(hexa, hexa.get_rect(center=(SCREEN_WHITH / 2, SCREEN_HIGHT / 2 - 180)))
+        screen.blit(hexa, hexa.get_rect(center=(SCREEN_WHITH / 2, SCREEN_HIGHT / 2 -50)))
         reset1 = font.render("Du hast Level 1 zurückgestezt",True,red)
         reset2 = font.render("Du hast Level 2 zurückgestezt",True,red)
         s1 = font.render("Bitte beende oder resette erst Level 1",True,red)
@@ -583,13 +584,15 @@ while running:
                         elif label == "Back":
                             show_screen3  = True
                             show_screen4 = False
+                            if hardcore:
+                                spiele_musik(menu)
                     elif erststart == True:
                         time.sleep(0.1)
                         erststart = False
         helper = font.render("Um ein Level2 zu starten musst du zuerst Level1 resetten und umgekehrt. Spielstände werden gespeichert",True,red)
         screen.blit(helper, helper.get_rect(center=(SCREEN_WHITH/2, SCREEN_HIGHT-50)))
         if not w_lvl1:
-            screen.blit(lock,(SCREEN_WHITH/2-20, SCREEN_HIGHT/2+20, 300, 70))
+            screen.blit(lock,(SCREEN_WHITH/2-20, SCREEN_HIGHT/2+110, 300, 70))
     if s_settings:
         mouse_pos = pygame.mouse.get_pos()
  
@@ -892,7 +895,7 @@ while running:
         if spawnedlvl1 >= 64:
             for eny in enemies:
                 Enemy.getindic(self = eny, indi = 3)
-        if spawnedlvl1 >= 3:
+        if spawnedlvl1 >= 80:
             win = True
             s_lvl1 = False
         screen.blit(wall,(220,50))
@@ -1188,7 +1191,7 @@ while running:
         if spawnedlvl1 >= 64:
             for eny in enemies:
                 Enemy.getindic(self = eny, indi = 3)
-        if spawnedlvl1 >= 3:
+        if spawnedlvl1 >= 100:
             win = True
             s_lvl1 = False
         screen.blit(wall,(220,50))
