@@ -196,7 +196,8 @@ buttons3 = [
     {"rect": pygame.Rect(50, 50, 70, 70), "text": "  "},
     {"rect": pygame.Rect(200, 50, 70, 70), "text": " "},
     {"rect": pygame.Rect(320, 50, 70, 70), "text": "   "},
-    {"rect": pygame.Rect(440, 50, 70, 70), "text": "    "}
+    {"rect": pygame.Rect(440, 50, 70, 70), "text": "    "},
+    {"rect": pygame.Rect(440, 50, 70, 70), "text": "x5"}
 ]
  
  
@@ -251,6 +252,10 @@ class Enemy:
     def getindic(self,indi):
         if self.livetime <3:
             self.indic = indi
+    
+
+    def getspeed(self):
+        self.speed = 25
        
  
        
@@ -513,13 +518,13 @@ while running:
         s1 = font.render("Bitte beende oder resette erst Level 1",True,red)
         s2 = font.render("Bitte beende oder resette erst Level 2",True,red)
         if r1:
-            screen.blit(reset1,(SCREEN_WHITH/2+270, SCREEN_HIGHT/2-90+20, 70, 70))
+            screen.blit(reset1,(SCREEN_WHITH/2+270, SCREEN_HIGHT/2+20, 70, 70))
             r1counter +=1
             if r1counter > 100:
                 r1counter = 0
                 r1 = False
         if r2:
-            screen.blit(reset2,(SCREEN_WHITH/2+270, SCREEN_HIGHT/2+20, 70, 70))
+            screen.blit(reset2,(SCREEN_WHITH/2+270, SCREEN_HIGHT/2+20+90, 70, 70))
             r2counter +=1
             if r2counter > 100:
                 r2counter = 0
@@ -702,7 +707,8 @@ while running:
            
         else:
             for eny in enemies:
-                positioEn = Enemy.get_position(self = eny)
+                positioEn = Enemy.get_position(
+                    self = eny)
                 for hibox in hitboxes2:
                     pygame.draw.rect(screen,red,(hibox[0],hibox[1]-150,20,90))
                     if (hibox[0] < positioEn[0]+35 < (hibox[0]+20)) and (hibox[1]-150 < positioEn[1]+35 < (hibox[1]+40)):
@@ -756,6 +762,9 @@ while running:
                                 lvl1time = 0
                                 placing_tower3=True
                                 new_tower3 = (mouse_x, mouse_y)
+                        if label == "x5":
+                            for eny in enemies:
+                                Enemy.getspeed(self = eny)
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     placing_tower = False
@@ -1054,6 +1063,10 @@ while running:
                                 lvl1time = 0
                                 placing_tower3=True
                                 new_tower3 = (mouse_x, mouse_y)
+                        if label == "x5":
+                            for eny in enemies:
+                                Enemy.getspeed(self = eny)
+                        
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     placing_tower = False
@@ -1377,6 +1390,9 @@ while running:
                             lvl1time = 0
                             placing_tower3=True
                             new_tower3 = (mouse_x, mouse_y)
+                    if label == "x5":
+                            for eny in enemies:
+                                Enemy.getspeed(self = eny)
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 placing_tower = False
@@ -1556,8 +1572,9 @@ while running:
         screen.blit(stars,(0,0))
         endlesstext = font_large.render(f"Du hast {wellen} Wellen überlebt",True,red)
         screen.blit(endlesstext,endlesstext.get_rect(center = (SCREEN_WHITH/2, SCREEN_HIGHT/2)))
-        if endlesstimer >= 300:
+        if endlesstimer >= 120:
             s_endlessend = False
+            endless = False
             show_screen3 = True
             enemies = []
             ec = 0
@@ -1589,3 +1606,10 @@ while running:
  
 pygame.quit()
 sys.exit()
+
+
+
+
+
+
+
