@@ -196,8 +196,7 @@ buttons3 = [
     {"rect": pygame.Rect(50, 50, 70, 70), "text": "  "},
     {"rect": pygame.Rect(200, 50, 70, 70), "text": " "},
     {"rect": pygame.Rect(320, 50, 70, 70), "text": "   "},
-    {"rect": pygame.Rect(440, 50, 70, 70), "text": "    "},
-    {"rect": pygame.Rect(440, 50, 70, 70), "text": "x5"}
+    {"rect": pygame.Rect(440, 50, 70, 70), "text": "    "}
 ]
  
  
@@ -252,10 +251,9 @@ class Enemy:
     def getindic(self,indi):
         if self.livetime <3:
             self.indic = indi
-    
+    def get_speed(self,speedi):
+        self.speed = speedi
 
-    def getspeed(self):
-        self.speed = 25
        
  
        
@@ -404,7 +402,7 @@ once = True
 show_startscreen= True
 running = True
 w_lvl1 = False
-w_lvl2 = True
+w_lvl2 = False
 while running:
     if w_lvl2:
         buttons4 = [
@@ -490,15 +488,54 @@ while running:
                         show_screen4 = True
                         show_screen3 = False
                         hardcore = False
+                        enemies = []
+                        ec = 0
+                        wellen = 0
+                        oncer = 0
+                        oncerlast = 0
+                        last = 0
+                        towers = []
+                        towers2 = []
+                        towers3 = []
+                        spawnedlvl1 = 0
+                        spawnlvl1 = 0
+                        money = 1000
+                        lvl1speicher = False
                     elif label == "Hardcore":
                         show_screen4 = True
                         show_screen3 = False
                         hardcore = True
                         w_lvl1 = False
+                        enemies = []
+                        ec = 0
+                        wellen = 0
+                        oncer = 0
+                        oncerlast = 0
+                        last = 0
+                        towers = []
+                        towers2 = []
+                        towers3 = []
+                        spawnedlvl1 = 0
+                        spawnlvl1 = 0
+                        money = 1000
+                        lvl1speicher = False
                         spiele_musik(hardcorem)
                     elif label == "Endless":
                         endless = True
                         hardcore = False
+                        enemies = []
+                        ec = 0
+                        wellen = 0
+                        oncer = 0
+                        oncerlast = 0
+                        last = 0
+                        towers = []
+                        towers2 = []
+                        towers3 = []
+                        spawnedlvl1 = 0
+                        spawnlvl1 = 0
+                        money = 1000
+                        lvl1speicher = False
                         spiele_musik(endlessm)
                     elif label == "Beenden":
                         running = False
@@ -510,9 +547,19 @@ while running:
         screen.fill(black)
         screen.blit(stars, (0, 0))
         screen.blit(planet01, (SCREEN_WHITH / 2 - SCREEN_HIGHT / 2, 0))
+        
         if hardcore:
             screen.blit(planet04, (SCREEN_WHITH / 2 - SCREEN_HIGHT / 2, 0))  
-        screen.blit(hexa, hexa.get_rect(center=(SCREEN_WHITH / 2, SCREEN_HIGHT / 2 -50)))
+        
+            l = font.render("Hardcore Mode", True,WHITE)
+            screen.blit(l,l.get_rect(center=(SCREEN_WHITH / 2, SCREEN_HIGHT / 2 -20)))
+       
+        if not hardcore:
+            l = font.render("Normal Mode", True,WHITE)
+            screen.blit(l,l.get_rect(center=(SCREEN_WHITH / 2, SCREEN_HIGHT / 2-20)))
+        screen.blit(hexa, hexa.get_rect(center=(SCREEN_WHITH / 2, SCREEN_HIGHT / 2 -150)))
+                        
+            
         reset1 = font.render("Du hast Level 1 zurückgestezt",True,red)
         reset2 = font.render("Du hast Level 2 zurückgestezt",True,red)
         s1 = font.render("Bitte beende oder resette erst Level 1",True,red)
@@ -707,8 +754,7 @@ while running:
            
         else:
             for eny in enemies:
-                positioEn = Enemy.get_position(
-                    self = eny)
+                positioEn = Enemy.get_position(self = eny)
                 for hibox in hitboxes2:
                     pygame.draw.rect(screen,red,(hibox[0],hibox[1]-150,20,90))
                     if (hibox[0] < positioEn[0]+35 < (hibox[0]+20)) and (hibox[1]-150 < positioEn[1]+35 < (hibox[1]+40)):
@@ -762,9 +808,6 @@ while running:
                                 lvl1time = 0
                                 placing_tower3=True
                                 new_tower3 = (mouse_x, mouse_y)
-                        if label == "x5":
-                            for eny in enemies:
-                                Enemy.getspeed(self = eny)
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     placing_tower = False
@@ -1063,9 +1106,6 @@ while running:
                                 lvl1time = 0
                                 placing_tower3=True
                                 new_tower3 = (mouse_x, mouse_y)
-                        if label == "x5":
-                            for eny in enemies:
-                                Enemy.getspeed(self = eny)
                         
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
@@ -1390,9 +1430,6 @@ while running:
                             lvl1time = 0
                             placing_tower3=True
                             new_tower3 = (mouse_x, mouse_y)
-                    if label == "x5":
-                            for eny in enemies:
-                                Enemy.getspeed(self = eny)
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 placing_tower = False
@@ -1536,7 +1573,7 @@ while running:
             oncer = 0
             oncerlast = 0
     
-        wellen = ec
+        wellen = ec+1
         wellent = font.render(f"Welle: {wellen}",True,red)
         screen.blit(wellent,(SCREEN_WHITH-200,50))
         screen.blit(wall,(220,50))
