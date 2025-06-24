@@ -24,6 +24,9 @@ screen = pygame.display.set_mode((SCREEN_WHITH, SCREEN_HIGHT),pygame.FULLSCREEN)
 FS = True
 pygame.display.set_caption("Hexaflow")
 pygame.mixer.init()
+
+#Musik
+
 level2 = "lvl2m.mp3"
 menu = "menu.mp3"
 rick = "rick roll.mp3"
@@ -33,6 +36,7 @@ lvl1h = "lvl1h.mp3"
 lvl2h = "lvl2h.mp3"
 endlessm = "endless.mp3"
 hardcore = False
+
 num = 1
 pygame.mixer.music.set_volume(volume)
 def spiele_musik(datei):
@@ -47,7 +51,9 @@ lvl1lives = 200
 spawnedlvl1= 0
 spawnlvl1 = 0
 healertimer = 0
- 
+
+#Farben
+
 white = (255, 255, 255)
 black = (0, 0, 0)
 red = (255,0,0)
@@ -60,7 +66,7 @@ DARK_BLUE = (0, 90, 200)
 TEXT_COLOR = (255, 255, 255)
 new_tower = (0,0)
  
- 
+ #Fonts
  
 font_large = pygame.font.SysFont("Georgia", 72)
 font = pygame.font.SysFont("Georgia", 32)
@@ -70,7 +76,7 @@ fontnor = pygame.font.SysFont("Georgia", 54)
 ec = 0
 
  
- 
+ #Texte
  
 start_text1 = font_large.render("Hannes Entertainment", True, red)
 start_text2 = font_small.render("presents", True, white)
@@ -90,7 +96,9 @@ lvl2speicher = False
 endless = False
 s_endlessend = False
 lvl2time = 0
- 
+
+#Alle Assets und Images
+
 image = pygame.image.load("planet06.png").convert_alpha()
 image_scaled = pygame.transform.scale(image, (SCREEN_HIGHT, SCREEN_HIGHT))
 planet01 = pygame.image.load("planet01.png").convert_alpha()
@@ -154,9 +162,11 @@ last = 0
  
 alpha = 0
 fade_in = True
+
+#Screens und Triggers
+
 show_startscreen = True
-show_screenidk2 = False
- 
+show_screenidk2 = False 
 show_screen3 = False
 show_screen4 = False
 s_lvl1 = False
@@ -172,7 +182,7 @@ healers1 = 0
 h2 = False
 l2 = False
 laser1t = 0
-#Menu
+#Menubuttons
 buttons = [
     {"rect": pygame.Rect(SCREEN_WHITH/2-150, SCREEN_HIGHT/2, 300, 70), "text": "Level 1"},
     {"rect": pygame.Rect(SCREEN_WHITH/2-150, SCREEN_HIGHT/2+90, 300, 70), "text": "Level 2"},
@@ -183,6 +193,7 @@ buttons = [
     {"rect": pygame.Rect(20,200, 70, 70), "text": "Back"}
    # {"rect": pygame.Rect(SCREEN_WHITH/2+180, SCREEN_HIGHT/2+90, 70, 70), "text": "  Reset  "}
 ]
+#Einstellungsbuttons
 buttons2 = [
     {"rect": pygame.Rect(SCREEN_WHITH/2-80-32, 250, 32, 32), "text": "-"},
     {"rect": pygame.Rect(SCREEN_WHITH/2+80, 250, 32, 32), "text": "+"},
@@ -190,7 +201,7 @@ buttons2 = [
     {"rect": pygame.Rect(SCREEN_WHITH/2-115/2, 300, 115, 50), "text": "Mute"},
     {"rect": pygame.Rect(SCREEN_WHITH/2-160/2, SCREEN_HIGHT-80, 160, 50), "text": "Cheats"},
     {"rect": pygame.Rect(SCREEN_WHITH/2-180/2, 500, 180, 50), "text": "Window"}
- 
+#Turmbuttons
 ]
 buttons3 = [
     {"rect": pygame.Rect(50, 50, 70, 70), "text": "  "},
@@ -208,6 +219,8 @@ buttons4 = [
  
 WHITE = (255, 255, 255)
 RED = (200, 50, 50)
+
+#Gener mit pathfinding (Werden in der liste mit enemies gespeichert)
 class Enemy:
     def __init__(self, path):
         self.path = path
@@ -256,8 +269,7 @@ class Enemy:
 
        
  
-       
- 
+    #Gegner mit grafiken bestücken nach 3 ms
        
     def draw(self, surface):
         pygame.draw.circle(surface, RED, (int(self.x), int(self.y)), 10)
@@ -308,7 +320,7 @@ class Enemy:
                 self.maxlives = 90
         
  
- 
+#Weg für gegner festlegen
 square_path = [
     (-10, 200), (SCREEN_WHITH-100, 200),
     (170, SCREEN_HIGHT-100), (SCREEN_WHITH+6, SCREEN_HIGHT-40)
